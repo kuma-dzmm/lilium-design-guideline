@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ToolBear · UI Kit</title>
+<link rel="stylesheet" href="kit.css"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="Primitives.jsx"></script>
+<script type="text/babel" src="Navbar.jsx"></script>
+<script type="text/babel" src="LoginView.jsx"></script>
+<script type="text/babel" src="WalletView.jsx"></script>
+<script type="text/babel" src="MarketView.jsx"></script>
+<script type="text/babel" src="GamesView.jsx"></script>
+<script type="text/babel" src="OtherViews.jsx"></script>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+function App() {
+  const [user, setUser] = useState(null); // null -> login flow; {} -> signed-in
+  const [route, setRoute] = useState('market');
+  const [activeGame, setActiveGame] = useState(null);
+  const [confirmSignOut, setConfirmSignOut] = useState(false);
+
+  // Persist route so refreshes don't lose place
+  useEffect(() => {
+    const saved = localStorage.getItem('tb.route');
+    if (saved) setRoute(saved);
+    const u = localStorage.getItem('tb.user');
+    if (u) setUser(JSON.parse(u));
+  }, []);
+  useEffect(() => { localStorage.setItem('tb.route', route); }, [route]);
+  useEffect(() => {
+    if (user) localStorage.setItem('tb.user', JSON.stringify(user));
+    else localStorage.removeItem('tb.user');
+  }, [user]);
+
+  if (!user) {
+    return (
+      <div className="tb-app">
+        <Navbar route={route} setRoute={setRoute} user={null} />
+        <LoginView onSignIn={setUser} />
+      </div>
+    );
+  }
+
+  let main;
+  if (activeGame === 'poker') {
+    main = <PokerTable onClose={() => setActiveGame(null)} />;
+  } else {
+    switch (route) {
+      case 'market':       main = <MarketView />; break;
+      case 'stock':        main = <StockView />; break;
+      case 'wallet':       main = <WalletView />; break;
+      case 'pals':         main = <PalsView />; break;
+      case 'games':        main = <GamesView onOpenGame={g => setActiveGame(g)} />; break;
+      case 'achievements': main = <EmptyState title="成就" body="你还没有解锁任何成就。先去交易行转转？" />; break;
+      case 'settings':     main = <EmptyState title="设置" body="这里是个示意占位，真实版本里有偏好、安全、通知。" />; break;
+      case 'more':         main = <EmptyState title="更多" body="帕鲁 · 交易行 · 逃离 · 成就 · 设置" />; break;
+      case 'raid':         main = <EmptyState title="逃离魅魔谷" body="文字 MUD。进入洞穴前请先装备武器。" />; break;
+      case 'board':        main = <EmptyState title="交易行" body="通用订单簿交易。即将开放。" />; break;
+      default:             main = <MarketView />;
+    }
+  }
+
+  return (
+    <div className="tb-app">
+      <Navbar
+        route={route} setRoute={r => { setActiveGame(null); setRoute(r); }}
+        user={user} status="success"
+        onSignOut={() => setConfirmSignOut(true)}
+      />
+      {main}
+      <div className="tb-mobile-tabbar" style={{ display: 'none' }}>
+        <TabBar route={route} setRoute={r => { setActiveGame(null); setRoute(r); }}/>
+      </div>
+      {confirmSignOut && (
+        <ConfirmDialog
+          title="确认退出账号？"
+          body="退出后需要重新获取登录码。你当前持仓和未完成订单不会丢失。"
+          confirmLabel="退出账号"
+          danger
+          onCancel={() => setConfirmSignOut(false)}
+          onConfirm={() => { setConfirmSignOut(false); setUser(null); }}
+        />
+      )}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+<style>
+  /* Responsive: below 1024px, hide desktop nav, show mobile tab-bar */
+  @media (max-width: 1023px) {
+    .tb-nav-desktop { display: none !important; }
+    .tb-mobile-tabbar { display: block !important; }
+    .tb-main { padding-bottom: 80px !important; }
+  }
+</style>
+
+</body>
+</html>

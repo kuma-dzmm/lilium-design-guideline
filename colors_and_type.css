@@ -1,0 +1,206 @@
+/* ============================================================
+   Lilium (ToolBear / 工具熊) Design System
+   Extracted from toolbear_ui/frontend/src/style.css
+   Dark-themed game-economy dashboard. All values authoritative.
+   ============================================================ */
+
+:root {
+  /* ---------- Surface / Background tokens ---------- */
+  --bg-primary:    #0f0f12;   /* app canvas */
+  --bg-secondary:  #1a1a21;   /* cards, navbar, modals */
+  --bg-tertiary:   #252530;   /* inputs, hover states, inner panels */
+  --border:        #32323e;   /* hairlines on cards + inputs */
+
+  /* ---------- Text ---------- */
+  --fg-primary:    #e8e8ec;   /* body + headings */
+  --fg-secondary:  #8e8e9d;   /* labels, captions, secondary nav */
+
+  /* ---------- Accent + semantic ---------- */
+  --accent:        #ff5a8a;   /* brand pink — CTAs, focus rings, active nav */
+  --success:       #3fb950;   /* +gain, income, online status */
+  --danger:        #ff3860;   /* -loss, expense, errors, destructive */
+  --info:          #58a6ff;   /* transfer badges, informational */
+  --warning:       #d29922;   /* caution */
+
+  /* Translucent tints used as badge / highlight backgrounds */
+  --accent-tint:   rgba(255, 90, 138, 0.15);
+  --accent-ring:   rgba(255, 90, 138, 0.30);
+  --success-tint:  rgba(63, 185, 80, 0.15);
+  --danger-tint:   rgba(255, 56, 96, 0.15);
+  --info-tint:     rgba(88, 166, 255, 0.15);
+  --warning-tint:  rgba(210, 153, 34, 0.15);
+
+  /* ---------- Typography ---------- */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans',
+    'Noto Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+    Helvetica, Arial, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono:
+    'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono',
+    ui-monospace, Menlo, Consolas, monospace;
+
+  /* Type scale (observed in views) */
+  --fs-xs:   12px;
+  --fs-sm:   13px;
+  --fs-base: 14px;    /* body */
+  --fs-md:   15px;    /* list row primary text */
+  --fs-lg:   16px;
+  --fs-xl:   18px;    /* dialog headings */
+  --fs-2xl:  24px;    /* page titles */
+  --fs-3xl:  30px;    /* "about" headings */
+  --fs-display: 40px; /* hero balance, login code */
+
+  --lh-tight: 1.2;
+  --lh-body:  1.5;
+  --lh-loose: 1.8;
+
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semibold: 600;
+  --fw-bold:    700;
+
+  /* ---------- Radii ---------- */
+  --radius-sm:   6px;
+  --radius-md:   8px;   /* buttons, inputs */
+  --radius-lg:   10px;  /* list rows, badges */
+  --radius-xl:   12px;  /* cards, modals */
+  --radius-pill: 9999px;
+
+  /* ---------- Spacing (Tailwind-derived, 4px base) ---------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ---------- Elevation / shadows ---------- */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5), 0 4px 6px -4px rgba(0,0,0,0.4);
+  --shadow-popover: 0 10px 15px -3px rgba(0,0,0,0.6);
+  --shadow-modal:   0 25px 50px -12px rgba(0,0,0,0.7);
+
+  /* ---------- Motion ---------- */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --easing: ease;
+
+  /* ---------- Layout ---------- */
+  --navbar-h: 56px;
+  --mobile-tabbar-h: 56px;
+  --breakpoint-xs: 480px;
+}
+
+/* ============================================================
+   Semantic element defaults
+   ============================================================ */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--fg-primary);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 { font-size: var(--fs-2xl); font-weight: var(--fw-bold);     letter-spacing: -0.01em; line-height: var(--lh-tight); }
+h2 { font-size: var(--fs-xl);  font-weight: var(--fw-semibold); line-height: var(--lh-tight); }
+h3 { font-size: var(--fs-lg);  font-weight: var(--fw-semibold); }
+h4 { font-size: var(--fs-base);font-weight: var(--fw-semibold); }
+
+p  { font-size: var(--fs-base); line-height: var(--lh-body); }
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing),
+              color var(--duration-fast) var(--easing),
+              opacity var(--duration-fast) var(--easing),
+              transform var(--duration-fast) var(--easing);
+  font-family: inherit;
+}
+.btn:active { opacity: 0.8; transform: scale(0.98); }
+
+.btn-primary   { background: var(--accent); color: #fff; }
+.btn-primary:hover   { background: #e54e7b; } /* accent / 0.85 */
+.btn-secondary { background: var(--bg-tertiary); color: var(--fg-primary); border-color: var(--border); }
+.btn-secondary:hover { background: var(--bg-primary); }
+.btn-danger    { background: var(--danger); color: #fff; }
+.btn-ghost     { background: transparent; color: var(--fg-secondary); }
+.btn-ghost:hover { color: var(--fg-primary); background: var(--bg-tertiary); }
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+}
+
+/* ---------- Inputs ---------- */
+.input, .select {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--fg-primary);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  font-size: var(--fs-base);
+  font-family: inherit;
+  transition: border-color var(--duration-fast) var(--easing),
+              box-shadow var(--duration-fast) var(--easing);
+}
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--accent-ring);
+  box-shadow: 0 0 0 1px rgba(255, 90, 138, 0.24);
+}
+.input::placeholder { color: rgba(142,142,157,0.6); }
+
+/* ---------- Badges (pill with translucent tint) ---------- */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.badge-success { background: var(--success-tint); color: var(--success); }
+.badge-danger  { background: var(--danger-tint);  color: var(--danger); }
+.badge-info    { background: var(--info-tint);    color: var(--info); }
+.badge-warning { background: var(--warning-tint); color: var(--warning); }
+.badge-accent  { background: var(--accent-tint);  color: var(--accent); }
+
+/* ---------- Focus ring utility ---------- */
+.ui-focus-ring:focus-visible {
+  outline: 2px solid rgba(255, 90, 138, 0.78);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px rgba(255, 90, 138, 0.24);
+}
